@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <title>Submit Report - Civilinkon</title>
     <style>
         :root {
@@ -127,6 +127,11 @@
 
         .section-content { margin-left: 35px; }
 
+        @media (max-width: 700px) {
+            .form-alert { margin-left: 34px; font-size: 10px; }
+            .field-error { font-size: 9px; }
+        }
+
         .text-input, .text-area {
             display: block;
             width: 100%;
@@ -147,6 +152,30 @@
         .text-input:focus, .text-area:focus {
             border-color: #ff9b76;
             box-shadow: 0 0 0 3px #fff1e9;
+        }
+
+        .form-alert {
+            margin: 0 0 18px 35px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .form-alert.success {
+            color: #176b38;
+            background: #eaf8ef;
+            border: 1px solid #bde7ca;
+        }
+        .form-alert.error {
+            color: #a32626;
+            background: #fff0f0;
+            border: 1px solid #f1c3c3;
+        }
+        .field-error {
+            display: block;
+            margin: 5px 0 0;
+            color: #c62828;
+            font-size: 11px;
         }
 
         .counter {
@@ -656,6 +685,7 @@
             .section-heading h2 { font-size: 19px; margin: 2px 0 5px; }
             .helper { font-size: 13px; line-height: 1.5; }
             .section-content { margin-left: 50px; }
+        .form-alert { margin-left: 50px; }
 
             .text-input {
                 height: 49px;
@@ -749,7 +779,68 @@
             .volunteer-button { padding: 12px 22px; font-size: 12px; }
         }
 
-    </style>
+
+        /* CIVILINKON - LIGHT POPPINS TYPOGRAPHY */
+
+            body,
+            button,
+            input,
+            textarea,
+            select {
+                font-family: "Poppins", sans-serif;
+                font-weight: 400;
+            }
+
+            /* Judul utama */
+            .intro h1 {
+                font-weight: 600;
+            }
+
+            /* Heading bagian */
+            .section-heading h2,
+            .side-card h2 {
+                font-weight: 600;
+            }
+
+            /* Label dan elemen kecil */
+            .eyebrow,
+            .step-number,
+            .list-number {
+                font-weight: 500;
+            }
+
+            /* Label pilihan dan tombol */
+            .choice-label,
+            .map-button,
+            .volunteer-button {
+                font-weight: 500;
+            }
+
+            /* Tombol utama */
+            .submit-button,
+            .upload-title {
+                font-weight: 500;
+            }
+
+            /* Teks penjelasan */
+            .helper,
+            .choice-subtitle,
+            .upload-help,
+            .privacy-note,
+            .counter,
+            .file-name {
+                font-weight: 400;
+            }
+
+            /* Teks penekanan */
+            strong,
+            .process-list strong,
+            .volunteer-cta strong {
+                font-weight: 600;
+            }
+
+
+            </style>
 </head>
 <body>
 <main class="report-page">
@@ -763,8 +854,23 @@
     </header>
 
     <div class="report-layout">
-        <form class="report-form" method="POST" action="#" enctype="multipart/form-data">
+        <form class="report-form" method="POST" action="{{ route('reports.store') }}" enctype="multipart/form-data">
             @csrf
+
+            @if (session('success'))
+                <div class="form-alert success" role="status">{{ session('success') }}</div>
+            @endif
+
+            @if ($errors->any())
+                <div class="form-alert error" role="alert">
+                    <strong>Periksa kembali data laporan:</strong>
+                    <ul style="margin: 6px 0 0; padding-left: 18px;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             <section class="form-section">
                 <div class="section-heading">
@@ -776,7 +882,9 @@
                 </div>
                 <div class="section-content">
                     <input class="text-input" type="text" name="title" maxlength="100"
+                           value="{{ old('title') }}"
                            placeholder="Example: Broken streetlight near school" required>
+                    @error('title') <span class="field-error">{{ $message }}</span> @enderror
                     <div class="counter" id="titleCount">0/100</div>
                 </div>
             </section>
@@ -792,27 +900,27 @@
                 <div class="section-content category-grid">
                     <label class="select-card">
                         <span class="category-icon">🗑️</span><span class="choice-label">Trash Buildup</span>
-                        <input type="radio" name="category" value="trash_buildup" required>
+                        <input type="radio" name="category" value="trash_buildup" required @checked(old("category") === "trash_buildup")>
                     </label>
                     <label class="select-card">
                         <span class="category-icon">🧹</span><span class="choice-label">Dirty Public Areas</span>
-                        <input type="radio" name="category" value="dirty_public_areas">
+                        <input type="radio" name="category" value="dirty_public_areas" @checked(old("category") === "dirty_public_areas")>
                     </label>
                     <label class="select-card">
                         <span class="category-icon">♻️</span><span class="choice-label">Improper Waste Disposal</span>
-                        <input type="radio" name="category" value="improper_waste_disposal">
+                        <input type="radio" name="category" value="improper_waste_disposal" @checked(old("category") === "improper_waste_disposal")>
                     </label>
                     <label class="select-card">
                         <span class="category-icon">🌳</span><span class="choice-label">Polluted Environment</span>
-                        <input type="radio" name="category" value="polluted_environment">
+                        <input type="radio" name="category" value="polluted_environment" @checked(old("category") === "polluted_environment")>
                     </label>
                     <label class="select-card">
                         <span class="category-icon">🏚️</span><span class="choice-label">Waste Facilities</span>
-                        <input type="radio" name="category" value="waste_facilities">
+                        <input type="radio" name="category" value="waste_facilities" @checked(old("category") === "waste_facilities")>
                     </label>
                     <label class="select-card">
                         <span class="category-icon">🚯</span><span class="choice-label">Illegal Dumping</span>
-                        <input type="radio" name="category" value="illegal_dumping">
+                        <input type="radio" name="category" value="illegal_dumping" @checked(old("category") === "illegal_dumping")>
                     </label>
                 </div>
             </section>
@@ -827,7 +935,8 @@
                 </div>
                 <div class="section-content">
                     <textarea class="text-area" name="description" maxlength="500"
-                              placeholder="Write a detailed description of the issue..." required></textarea>
+                              placeholder="Write a detailed description of the issue..." required>{{ old('description') }}</textarea>
+                    @error('description') <span class="field-error">{{ $message }}</span> @enderror
                     <div class="counter" id="descriptionCount">0/500</div>
                 </div>
             </section>
@@ -842,7 +951,9 @@
                 </div>
                 <div class="section-content location-row">
                     <input class="text-input" type="text" name="location"
+                           value="{{ old('location') }}"
                            placeholder="Street, area, or nearby landmark" required>
+                    @error('location') <span class="field-error">{{ $message }}</span> @enderror
                     <button class="map-button" type="button">
                         <span aria-hidden="true">⌖</span> Add on Map
                     </button>
@@ -861,22 +972,22 @@
                     <label class="select-card urgency-card">
                         <span class="urgency-dot low"></span>
                         <span class="choice-label">Low<span class="choice-subtitle">Not urgent</span></span>
-                        <input type="radio" name="urgency" value="low" required>
+                        <input type="radio" name="urgency" value="low" required @checked(old("urgency") === "low")>
                     </label>
                     <label class="select-card urgency-card">
                         <span class="urgency-dot medium"></span>
                         <span class="choice-label">Medium<span class="choice-subtitle">Needs attention soon</span></span>
-                        <input type="radio" name="urgency" value="medium">
+                        <input type="radio" name="urgency" value="medium" @checked(old("urgency") === "medium")>
                     </label>
                     <label class="select-card urgency-card">
                         <span class="urgency-dot high"></span>
                         <span class="choice-label">High<span class="choice-subtitle">Potentially dangerous or has a big impact</span></span>
-                        <input type="radio" name="urgency" value="high">
+                        <input type="radio" name="urgency" value="high" @checked(old("urgency") === "high")>
                     </label>
                     <label class="select-card urgency-card">
                         <span class="urgency-dot unsure"></span>
                         <span class="choice-label">Not sure<span class="choice-subtitle">I'm not sure</span></span>
-                        <input type="radio" name="urgency" value="not_sure">
+                        <input type="radio" name="urgency" value="not_sure" @checked(old("urgency") === "not_sure")>
                     </label>
                 </div>
             </section>
@@ -901,6 +1012,7 @@
                         <span class="upload-help">Drag and drop a file here, or click to browse<br><strong>Supports JPG, PNG (Max 5MB)</strong></span>
                         <span class="file-name" id="fileName"></span>
                         <input id="photo" type="file" name="photo" accept="image/png,image/jpeg" hidden>
+                        @error('photo') <span class="field-error">{{ $message }}</span> @enderror
                     </label>
                 </div>
             </section>
@@ -977,13 +1089,19 @@
     const titleCount = document.getElementById('titleCount');
     const descriptionCount = document.getElementById('descriptionCount');
 
-    titleInput?.addEventListener('input', () => {
+    if (titleInput && titleCount) {
         titleCount.textContent = `${titleInput.value.length}/100`;
-    });
+        titleInput.addEventListener('input', () => {
+            titleCount.textContent = `${titleInput.value.length}/100`;
+        });
+    }
 
-    descriptionInput?.addEventListener('input', () => {
+    if (descriptionInput && descriptionCount) {
         descriptionCount.textContent = `${descriptionInput.value.length}/500`;
-    });
+        descriptionInput.addEventListener('input', () => {
+            descriptionCount.textContent = `${descriptionInput.value.length}/500`;
+        });
+    }
 
     const photoInput = document.getElementById('photo');
     const uploadBox = document.getElementById('uploadBox');
