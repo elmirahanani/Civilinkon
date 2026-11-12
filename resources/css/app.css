@@ -1,10 +1,85 @@
-@import 'tailwindcss';
+
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+
+/* Font brand */
+@font-face {
+    font-family: 'Lequire Demo';
+    src: url('/fonts/lequire.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
 
 @theme {
     --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --font-poppins: 'Poppins', sans-serif;
+    --font-lequire: 'Lequire Demo', sans-serif;
+}
+
+.test-lequire {
+    font-family: 'Lequire Demo', sans-serif !important;
+    font-size: 40px;
+    font-weight: 400;
+}
+
+/* Login and Signup transitions */
+@view-transition {
+    navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 450ms;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-old(root) {
+    animation-name: fade-out;
+}
+
+::view-transition-new(root) {
+    animation-name: fade-in;
+}
+
+/* Card transition */
+.auth-card {
+    view-transition-name: auth-card;
+}
+
+/* Logo transition */
+.auth-logo {
+    view-transition-name: auth-logo;
+}
+
+.auth-active-tab {
+    view-transition-name: auth-active-tab;
+}
+
+/* Animations */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }
