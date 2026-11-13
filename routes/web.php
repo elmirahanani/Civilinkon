@@ -4,24 +4,37 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\TrackReportController;
 
-// Halaman utama
+
+// halaman utama
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Login
+// login
 Route::get('/login', [AuthController::class, 'login'])
     ->name('login');
 
-// Register / Signup
+// register / signup
 Route::get('/register', [AuthController::class, 'register'])
     ->name('register');
 
-// Form laporan
+// form laporan
 Route::get('/report', [ReportController::class, 'create'])
     ->name('reports.create');
 
-// Proses penyimpanan laporan
+// proses penyimpanan laporan
 Route::post('/report', [ReportController::class, 'store'])
     ->name('reports.store');
+
+// track report
+Route::get('/track', [TrackReportController::class, 'index'])
+    ->name('track.index');
+
+Route::post('/track', [TrackReportController::class, 'track'])
+    ->name('track.search');
+
+Route::get('/track/{trackingCode}/progress', [TrackReportController::class, 'progress'])
+    ->name('track.progress');
+
