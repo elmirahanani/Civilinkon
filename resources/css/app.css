@@ -1,9 +1,49 @@
 @import 'tailwindcss';
 
+/* Custom Fonts */
+@font-face {
+    font-family: 'Lequire';
+    src: url('/fonts/Lequire-Demo.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('/fonts/Poppins-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Poppins', sans-serif;
+    --font-lequire: 'Lequire', sans-serif;
+}
+
+
+/* NAVBAR RESPONSIVE */
+
+/* Default: Mobile & Tablet */
+.desktop-menu,
+.desktop-auth {
+    display: none;
+}
+
+.mobile-menu {
+    display: block;
+}
+
+/* Desktop: 1024px ke atas */
+@media (min-width: 1024px) {
+    .desktop-menu,
+    .desktop-auth {
+        display: flex !important;
+    }
+
+    .mobile-menu {
+        display: none !important;
+    }
 }
