@@ -7,18 +7,18 @@ use Illuminate\Support\Facades\DB;
 
 class AdminDashboardController extends Controller
 {
-    // menampilkan halaman dashboard
+    // Menampilkan halaman dashboard
     public function index()
     {
         return view('admin.dashboard');
     }
 
-    // mengambil data dashboard dalam format JSON
+    // Mengambil data dashboard dalam format JSON
     public function data()
     {
         $reports = Report::query();
 
-        // statistik utama
+        // Statistik utama
         $totalReports = (clone $reports)->count();
 
         $pendingReports = (clone $reports)
@@ -33,7 +33,7 @@ class AdminDashboardController extends Controller
             ->where('status', 'resolved')
             ->count();
 
-        // data grafik berdasarkan bulan pada tahun berjalan
+        // Data grafik berdasarkan bulan pada tahun berjalan
         $year = now()->year;
 
         $received = Report::query()
@@ -63,7 +63,7 @@ class AdminDashboardController extends Controller
             $resolvedData[] = (int) ($resolved[$month] ?? 0);
         }
 
-        // kategori laporan terbanyak
+        // Kategori laporan terbanyak
         $categories = Report::query()
             ->select('category', DB::raw('COUNT(*) as total'))
             ->groupBy('category')
@@ -71,12 +71,14 @@ class AdminDashboardController extends Controller
             ->limit(6)
             ->get();
 
-        // lokasi dengan jumlah laporan terbanyak
+        // Lokasi dengan jumlah laporan terbanyak
         $hotspots = Report::query()
             ->select(
                 'location',
                 DB::raw('COUNT(*) as total'),
-                DB::raw("SUM(CASE WHEN urgency = 'high' THEN 1 ELSE 0 END) as high_urgency")
+                DB::raw(
+                    "SUM(CASE WHEN urgency = 'high' THEN 1 ELSE 0 END) as high_urgency"
+                )
             )
             ->groupBy('location')
             ->orderByDesc('total')
@@ -105,3 +107,5 @@ class AdminDashboardController extends Controller
         ]);
     }
 }
+
+

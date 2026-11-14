@@ -53,11 +53,6 @@ class ReportController extends Controller
             'status' => 'submitted',
         ]);
 
-        return redirect()
-            ->route('reports.create')
-            ->with(
-                'success',
-                'Laporan berhasil dikirim! Kode pelacakan: ' . $trackingCode
-            );
+        return view('reports.success', compact('trackingCode'));
     }
 }
