@@ -42,7 +42,7 @@ class ReportController extends Controller
                 ->store('reports', 'public');
         }
 
-        Report::create([
+        $report = Report::create([
             'title' => $validated['title'],
             'category' => $validated['category'],
             'description' => $validated['description'],
@@ -53,11 +53,13 @@ class ReportController extends Controller
             'status' => 'submitted',
         ]);
 
+        $report->statusHistories()->create([
+            'status' => 'submitted',
+            'description' => 'Report received. Your report has been submitted successfully.',
+        ]);
+
         return redirect()
-            ->route('reports.create')
-            ->with(
-                'success',
-                'Laporan berhasil dikirim! Kode pelacakan: ' . $trackingCode
-            );
+        ->route('reports.success')
+        ->with('trackingCode', $trackingCode);
     }
 }

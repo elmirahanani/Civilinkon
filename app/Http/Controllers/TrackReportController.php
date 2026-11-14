@@ -7,34 +7,36 @@ use Illuminate\Http\Request;
 
 class TrackReportController extends Controller
 {
-    // menampilkan halaman Track Report
     public function index()
     {
         return view('track.index');
     }
 
-    // mencari laporan berdasarkan tracking code
     public function track(Request $request)
     {
         $validated = $request->validate([
             'tracking_code' => ['required', 'string'],
         ]);
 
-        $report = Report::where(
-            'tracking_code',
-            $validated['tracking_code']
-        )->first();
+        $trackingCode = strtoupper(trim($validated['tracking_code']));
+
+        $report = Report::where('tracking_code', $trackingCode)
+            ->with(['statusHistories' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            }])
+            ->first();
 
         if (!$report) {
             return back()
                 ->withInput()
-                ->with('error', 'Tracking code tidak ditemukan.');
+                ->with('error', 'Tracking code tidak ditemukan. Periksa kembali kode laporan kamu.');
         }
+
+        session(['recent_tracking_code' => $trackingCode]);
 
         return view('track.result', compact('report'));
     }
 
-    // mengambil progres terbaru untuk polling
     public function progress(string $trackingCode)
     {
         $report = Report::where('tracking_code', $trackingCode)
