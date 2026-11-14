@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -11,7 +12,7 @@ use App\Http\Controllers\VolunteerController;
 
 // Landing sementara
 Route::get('/', function () {
-    return redirect('/login');
+    return view('landing');
 });
 
 // Authentication
