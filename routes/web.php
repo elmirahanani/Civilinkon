@@ -9,7 +9,7 @@ use App\Http\Controllers\TrackReportController;
 
 // halaman utama
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('landing');
 });
 
 // login
